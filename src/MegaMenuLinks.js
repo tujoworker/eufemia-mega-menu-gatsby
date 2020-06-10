@@ -16,7 +16,8 @@ export function OpenMegaMenuLink({ location }) {
     <Link
       to="/menu"
       state={{
-        prevLocation: JSON.parse(JSON.stringify(location))
+        prevLocation: JSON.parse(JSON.stringify(location)),
+        asModal: true
       }}
     >
       Open MegaMenu

@@ -1,5 +1,5 @@
 import React from 'react'
-import MegaMenu from './menu/dynamic-mega-menu'
+import MegaMenu from '../MegaMenu'
 
 export default function MegaMenuPage(props) {
   return <MegaMenu {...props} />

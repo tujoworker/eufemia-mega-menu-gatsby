@@ -6,7 +6,7 @@ import {
   // , Section, Modal
 } from 'dnb-ui-lib/components'
 import { SpacingHelper } from 'dnb-ui-lib/shared'
-import Link from '../../Link'
+import Link from './Link'
 
 export default function MegaMenu({ location }) {
   const { prevLocation } = location.state || {}

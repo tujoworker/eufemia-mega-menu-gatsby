@@ -21,15 +21,22 @@ import 'dnb-ui-lib/style/themes/ui'
 // Optional, use a Provider
 // Also, we do not use the additional wrapper (dnb-core-style) if we would import the core styles, but we import basis for now
 export const wrapRootElement = ({ element }) => (
-  <EufemiaProvider locale="en-US">
-    <Layout>{element}</Layout>
-  </EufemiaProvider>
+  <EufemiaProvider locale="en-US">{element}</EufemiaProvider>
 )
 wrapRootElement.propTypes = {
   element: PropTypes.node.isRequired
 }
 
-export const onRouteUpdate = ({ prevLocation }) => {
+// Optional, use a Provider
+// Also, we do not use the additional wrapper (dnb-core-style) if we would import the core styles, but we import basis for now
+export const wrapPageElement = ({ element, ...rest }) => (
+  <Layout {...rest}>{element}</Layout>
+)
+wrapPageElement.propTypes = {
+  element: PropTypes.node.isRequired
+}
+
+export const onRouteUpdate = () => {
   resetLevels(1)
 
   // in order to use our own focus management by using applyPageFocus
@@ -44,5 +51,60 @@ export const onRouteUpdate = ({ prevLocation }) => {
     }
   } catch (e) {
     console.log(e)
+  }
+}
+
+// const {
+//   publicLoader: { loadPageSync, loadPage, getResourceURLsForPathname }
+// } = require('./.cache/loader.js')
+
+export const replaceComponentRenderer = ({ props, loader }) => {
+  return React.createElement(ReplaceComponentRenderer, { ...props, loader })
+}
+
+class ReplaceComponentRenderer extends React.PureComponent {
+  constructor(props) {
+    super(props)
+
+    const {
+      location,
+      loader: { loadPage }
+    } = props
+
+    const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
+    // console.log('resourcesPathname', resourcesPathname)
+    loadPage(resourcesPathname).then((modalPageResources) => {
+      this.setState({
+        modalPageResources
+      })
+    })
+    this.state = {}
+  }
+
+  render() {
+    const props = this.props
+    const {
+      // loader: { loadPageSync },
+      location
+    } = props
+    let { pageResources } = props
+
+    const asModal = location?.state?.asModal
+    if (asModal) {
+      const { modalPageResources } = this.state
+      // const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
+      // const modalPageResources2 = loadPageSync(resourcesPathname)
+      // console.log('modalPageResources2', modalPageResources2)
+      if (modalPageResources?.component) {
+        pageResources = modalPageResources
+      }
+    }
+
+    const pageElement = React.createElement(pageResources.component, {
+      ...props,
+      key: pageResources.page.path
+    })
+
+    return pageElement
   }
 }

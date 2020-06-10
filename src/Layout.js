@@ -6,10 +6,6 @@ import {
   Location
 } from '@reach/router'
 import { Section, Modal } from 'dnb-ui-lib/components'
-// import Home from './pages/index'
-// import About from './pages/about'
-// import OtherPage from './pages/about/other-page'
-// import NotFound from './pages/404'
 
 // import { OpenMegaMenuLink } from '../MegaMenuLinks'
 import MegaMenu from './pages/mega-menu'
@@ -27,30 +23,27 @@ export default function Layout({ children }) {
           if (!location.state && location?.pathname.includes('/menu')) {
             location = {
               ...location,
-              state: { prevLocation: { pathname: '/' } }
+              state: { prevLocation: { pathname: '/' }, asModal: true }
             }
           }
           const { prevLocation } = location.state || {}
 
-          console.log(location.pathname, prevLocation)
-
           return (
             <>
+              <NoJavaScriptFallback location={location} />
+
               {children}
 
-              {/* <Routes location={prevLocation ? prevLocation : location} /> */}
-
-              <Drawer
-                open_state={prevLocation ? 'opened' : 'closed'}
-                on_close={() => {
-                  prevLocation && navigate(prevLocation.pathname)
-                }}
-              >
-                <MegaMenu location={location} />
-              </Drawer>
-
-              {/* {/\/mega-menu/.test(location.pathname) && <></>} */}
-              {/* {!location?.pathname.includes('/menu') && children} */}
+              {location?.pathname.includes('/menu') && (
+                <Drawer
+                  open_state={prevLocation ? 'opened' : 'closed'}
+                  on_close={() => {
+                    prevLocation && navigate(prevLocation.pathname)
+                  }}
+                >
+                  <MegaMenu location={location} />
+                </Drawer>
+              )}
             </>
           )
         }}
@@ -59,18 +52,6 @@ export default function Layout({ children }) {
   )
 }
 
-// function Routes(props) {
-//   return (
-//     <Router {...props}>
-//       <Home path="/" />
-//       {/* <MegaMenu path="/mega-menu" /> */}
-//       <About path="/about" />
-//       <OtherPage path="/about/other-page" />
-//       <NotFound path="*" />
-//     </Router>
-//   )
-// }
-
 const DrawerSection = styled(Section)`
   min-height: 80vh;
 
@@ -78,6 +59,20 @@ const DrawerSection = styled(Section)`
     color: var(--color-lavender);
   }
 `
+
+// In case there is no JS, the user sees the whole meny
+function NoJavaScriptFallback({ location }) {
+  return (
+    <div
+      style={{
+        display: typeof window !== 'undefined' ? 'none' : 'block'
+      }}
+      aria-hidden={typeof window !== 'undefined'}
+    >
+      <MegaMenu location={location} onload />
+    </div>
+  )
+}
 
 function Drawer({ children, ...props }) {
   return (
