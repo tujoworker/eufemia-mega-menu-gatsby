@@ -17,23 +17,24 @@ export default function Layout({ children }) {
       <NoJavaScriptFallback />
       <Location>
         {({ location, navigate }) => {
-          const hasMegaMenuPath = location?.pathname.includes('/menu')
+          const hasMegaMenuPath = location?.pathname.includes('/mega-menu')
 
           // Check if the user entered the page with /mega-menu
           // if so, then we define where to "go back again"
-          if (!location.state && hasMegaMenuPath) {
+          if (hasMegaMenuPath && !location?.state?.asModal) {
             location = {
               ...location,
-              state: { prevLocation: { pathname: '/' }, asModal: true }
+              state: { prevLocation: { pathname: '/' }, asModal: false }
             }
           }
+
           const { prevLocation } = location.state || {}
 
           return (
             <>
               {children}
 
-              {hasMegaMenuPath && (
+              {hasMegaMenuPath && location?.state?.asModal && (
                 <Drawer
                   open_state={prevLocation ? 'opened' : 'closed'}
                   on_close={() => {
