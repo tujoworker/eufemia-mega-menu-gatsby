@@ -4,14 +4,6 @@
  * See: https://www.gatsbyjs.org/docs/ssr-apis/
  */
 
-// You can delete this file if you're not using it
-
-/**
- * Implement Gatsby's Browser APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/browser-apis/
- */
-
 import React from 'react'
 import PropTypes from 'prop-types'
 import Layout from './src/Layout'
@@ -23,9 +15,4 @@ export const wrapPageElement = ({ element, ...rest }) => (
 )
 wrapPageElement.propTypes = {
   element: PropTypes.node.isRequired
-}
-
-export const replaceComponentRenderer = ({ props, loader }) => {
-  console.log('replaceComponentRenderer', props)
-  return React.createElement(ReplaceComponentRenderer, { ...props, loader })
 }
