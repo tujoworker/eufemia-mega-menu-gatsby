@@ -10,11 +10,6 @@ import EufemiaProvider from 'dnb-ui-lib/shared/Provider'
 import { resetLevels } from 'dnb-ui-lib/components/Heading'
 import Layout from './src/Layout'
 
-// import 'dnb-ui-lib/src/style'
-import 'dnb-ui-lib/style/basis'
-import 'dnb-ui-lib/style/components'
-import 'dnb-ui-lib/style/themes/ui'
-
 // currently, the focus helper is not in use
 // import { applyPageFocus } from 'dnb-ui-lib/shared/helpers'
 
@@ -54,47 +49,46 @@ export const onRouteUpdate = () => {
   }
 }
 
-// const {
-//   publicLoader: { loadPageSync, loadPage, getResourceURLsForPathname }
-// } = require('./.cache/loader.js')
-
 export const replaceComponentRenderer = ({ props, loader }) => {
   return React.createElement(ReplaceComponentRenderer, { ...props, loader })
 }
 
 class ReplaceComponentRenderer extends React.PureComponent {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      location,
+      loader: { loadPageSync }
+    } = props
+
+    // we do that here, because loadPageSync does not return correct data in that stage
+    const asModal = location?.state?.asModal
+    if (asModal) {
+      const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
+      const modalPageResources = loadPageSync(resourcesPathname)
+      return {
+        modalPageResources
+      }
+    }
+
+    return null
+  }
+
   constructor(props) {
     super(props)
 
-    const {
-      location,
-      loader: { loadPage }
-    } = props
+    const { location } = props
 
-    const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
-    // console.log('resourcesPathname', resourcesPathname)
-    loadPage(resourcesPathname).then((modalPageResources) => {
-      this.setState({
-        modalPageResources
-      })
-    })
-    this.state = {}
+    this.state = { pathname: location.pathname }
   }
 
   render() {
     const props = this.props
-    const {
-      // loader: { loadPageSync },
-      location
-    } = props
+    const { location } = props
     let { pageResources } = props
 
     const asModal = location?.state?.asModal
     if (asModal) {
       const { modalPageResources } = this.state
-      // const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
-      // const modalPageResources2 = loadPageSync(resourcesPathname)
-      // console.log('modalPageResources2', modalPageResources2)
       if (modalPageResources?.component) {
         pageResources = modalPageResources
       }

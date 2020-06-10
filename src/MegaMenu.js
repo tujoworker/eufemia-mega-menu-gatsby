@@ -9,7 +9,7 @@ import { SpacingHelper } from 'dnb-ui-lib/shared'
 import Link from './Link'
 
 export default function MegaMenu({ location }) {
-  const { prevLocation } = location.state || {}
+  const { prevLocation } = location?.state || {}
 
   return (
     <>
