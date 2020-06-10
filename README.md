@@ -1,28 +1,5 @@
-<h1 align="center">
-  Qiestion 2 - JSON Renders Components
-</h1>
+## A MegaMenu
 
-## Getting Started 
+This MegaMenu (MainMenu) works both as a static page (SSR pre-rendered HTML) and inside a Modal (Drawer).
 
-This app use the Gatsby CLI to create
-
-### CodeSandbox Link
-
-  https://codesandbox.io/s/github/hugowth/b_question_q2/tree/master/?fontsize=14
-
-### Development
-
-  Navigate into your new site’s directory and start it up.
-  ```sh
-  npm install -g gatsby-cli
-  npm i 
-  npm start
-  ```
-  Your site is now running at `http://localhost:8000`
-
-### Test
-
-  Using Jest and Enzyme
-  ```sh
-  npm test
-  ```
+The advantages of using the [Eufemia Drawer](https://eufemia.dnb.no/uilib/components/modal/demos#drawer-mode) is the fact that it disables all app interaction possibilities for both keyboard users and screen readers, as well as disabling scrolling for touch users. Except for the content inside the Drawer - for sure!
