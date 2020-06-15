@@ -65,8 +65,11 @@ class ReplaceComponentRenderer extends React.PureComponent {
     if (asModal) {
       const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
       const modalPageResources = loadPageSync(resourcesPathname)
-      return {
-        modalPageResources
+
+      if (modalPageResources) {
+        return {
+          modalPageResources
+        }
       }
     }
 
@@ -76,9 +79,19 @@ class ReplaceComponentRenderer extends React.PureComponent {
   constructor(props) {
     super(props)
 
-    const { location } = props
+    const {
+      location,
+      loader: { loadPage }
+    } = props
 
-    this.state = { pathname: location.pathname }
+    const resourcesPathname = location?.state?.prevLocation?.pathname || '/'
+    loadPage(resourcesPathname).then((modalPageResources) => {
+      this.setState({
+        modalPageResources
+      })
+    })
+
+    this.state = { pathname: location.pathname, modalPageResources: null }
   }
 
   render() {

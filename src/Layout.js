@@ -1,9 +1,7 @@
 import React from 'react'
-import styled from '@emotion/styled'
 import { ClassNames } from '@emotion/core'
 import { Location } from '@reach/router'
-import { Section, Modal } from 'dnb-ui-lib/components'
-
+import { Modal } from 'dnb-ui-lib/components'
 import MegaMenu from './pages/mega-menu'
 
 // import 'dnb-ui-lib/src/style'// core styles
@@ -35,14 +33,14 @@ export default function Layout({ children }) {
               {children}
 
               {hasMegaMenuPath && location?.state?.asModal && (
-                <Drawer
+                <MegaMenuDrawer
                   open_state={prevLocation ? 'opened' : 'closed'}
                   on_close={() => {
                     prevLocation && navigate(prevLocation.pathname)
                   }}
                 >
                   <MegaMenu location={location} />
-                </Drawer>
+                </MegaMenuDrawer>
               )}
             </>
           )
@@ -52,13 +50,12 @@ export default function Layout({ children }) {
   )
 }
 
-const DrawerSection = styled(Section)`
-  min-height: 80vh;
-
-  &::after {
-    color: var(--color-lavender);
-  }
-`
+// const DrawerSection = styled(Section)`
+//   min-height: 80vh;
+//   &::after {
+//     color: var(--color-lavender);
+//   }
+// `
 
 // In case there is no JS, the user sees the whole meny
 function NoJavaScriptFallback({ location }) {
@@ -81,22 +78,39 @@ function NoJavaScriptFallback({ location }) {
   )
 }
 
-function Drawer({ children, ...props }) {
+function MegaMenuDrawer({ children, ...props }) {
   return (
     <ClassNames>
-      {
-        (/*{ css }*/) => (
-          <Modal
-            mode="drawer"
-            title="I'm a MegaMenu"
-            trigger_hidden
-            no_animation_on_mobile
-            {...props}
-          >
-            <DrawerSection spacing>{children}</DrawerSection>
-          </Modal>
-        )
-      }
+      {({ css }) => (
+        <Modal
+          mode="drawer"
+          container_placement="top"
+          // title={<h1 className="dnb-sr-only">I'm a MegaMenu</h1>}
+          trigger_hidden
+          no_animation_on_mobile
+          content_class={css`
+            &.dnb-modal__content--top .dnb-modal__content__inner {
+              height: 70vh;
+              padding: 0;
+              .dnb-modal__wrapper {
+                margin: 0;
+                margin-top: 4rem; /* use our own spacing */
+                overflow: hidden; /* because of our fullscreen hr-lines */
+              }
+            }
+
+            html:not([data-dnb-test])
+              &.dnb-modal__content--drawer
+              .dnb-modal__content__inner {
+              animation: show-drawer 800ms cubic-bezier(0.04, 0.65, 0.55, 0.95)
+                forwards;
+            }
+          `}
+          {...props}
+        >
+          {children}
+        </Modal>
+      )}
     </ClassNames>
   )
 }
