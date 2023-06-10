@@ -9,7 +9,7 @@
     "@emotion/core": "10.0.28",
     "@emotion/styled": "10.0.27",
     "dnb-ui-lib": "7.0.3",
-    "gatsby": "^2.23.3",
+    "gatsby": "^4.25.7",
     "gatsby-plugin-create-client-paths": "2.3.4",
     "gatsby-plugin-manifest": "^2.4.11",
     "gatsby-plugin-offline": "3.2.9",
